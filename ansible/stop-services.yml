@@ -1,16 +1,18 @@
 - name: Stop ZooKeeper
   hosts: zookeeper
   become: yes
-  roles:
-    - role: zookeeper
-      tasks_from: stop
+  tasks:
+    - include_role:
+        name: zookeeper
+        tasks_from: stop
 
 - name: Stop Kafka Brokers
   hosts: kafka
   become: yes
-  roles:
-    - role: kafka
-      tasks_from: stop
+  tasks:
+    - include_role:
+        name: kafka
+        tasks_from: stop
 
 - name: Shutdown Spark Cluster
   hosts: spark_master:spark_workers
