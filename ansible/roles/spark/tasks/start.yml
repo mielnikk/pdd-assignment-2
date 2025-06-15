@@ -1,0 +1,26 @@
+---
+- name: Determine if this is a Spark master
+  set_fact:
+    is_master: "{{ inventory_hostname in groups['spark_master'] }}"
+
+- name: Start Spark master (if master node)
+  when: is_master
+  shell: >
+    nohup {{ spark_home }}/sbin/start-master.sh &
+  args:
+    executable: /bin/bash
+
+- name: Start Spark worker (if not master)
+  when: not is_master
+  shell: >
+    nohup {{ spark_home }}/sbin/start-worker.sh spark://{{ groups['spark_master'][0] }}:7077 &
+  args:
+    executable: /bin/bash
+
+- name: Wait for Spark UI port to be ready (for master only)
+  when: is_master
+  wait_for:
+    host: "{{ internal_ip | default(ansible_host) }}"
+    port: 8080
+    state: started
+    timeout: 20

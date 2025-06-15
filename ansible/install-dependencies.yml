@@ -1,0 +1,30 @@
+---
+- name: Install common dependencies (e.g., Java, Python)
+  hosts: all
+  become: yes
+  roles:
+    - common
+
+- name: Install Zookeeper on Zookeeper nodes
+  hosts: zookeeper
+  become: yes
+  roles:
+    - zookeeper
+
+- name: Install Kafka on Kafka nodes
+  hosts: kafka
+  become: yes
+  roles:
+    - kafka
+
+- name: Install Spark on Spark master nodes
+  hosts: spark_master
+  become: yes
+  roles:
+    - spark
+
+- name: Install Spark on Spark worker nodes
+  hosts: spark_workers
+  become: yes
+  roles:
+    - spark

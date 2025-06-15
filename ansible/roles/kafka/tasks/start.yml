@@ -1,0 +1,29 @@
+---
+- name: Ensure Kafka logs directory is writable
+  file:
+    path: "{{ kafka_home }}/logs"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0755'
+
+- name: Configure Kafka broker
+  copy:
+    content: |
+      broker.id={{ ansible_host.split('.')[-1] }}
+      zookeeper.connect={{ zookeeper_connect }}
+      listeners=PLAINTEXT://{{ ansible_hostname }}:9092
+    dest: "{{ kafka_home }}/config/server.properties"
+
+- name: Start Kafka broker
+  shell: >
+    nohup {{ kafka_home }}/bin/kafka-server-start.sh -daemon {{ kafka_home }}/config/server.properties
+  args:
+    executable: /bin/bash
+
+- name: Wait for Kafka to listen on port 9092
+  wait_for:
+    host: "{{ internal_ip | default(ansible_host) }}"
+    port: 9092
+    state: started
+    timeout: 30

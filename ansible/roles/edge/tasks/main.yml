@@ -1,0 +1,11 @@
+- name: Configure Edge Node
+  hosts: edge
+  become: true
+  tasks:
+    - name: Install useful tools
+      apt:
+        name:
+          - htop
+          - unzip
+          - tmux
+        state: present

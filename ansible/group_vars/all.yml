@@ -1,0 +1,7 @@
+zookeeper_home: /opt/zookeeper
+kafka_home: /opt/kafka
+spark_home: /opt/spark
+
+kafka_log_dir: /opt/kafka/logs
+broker_id: "{{ ansible_host.split('.')[-1] | int }}"
+zookeeper_connect: "{{ groups['zookeeper'] | map('extract', hostvars, ['internal_ip']) | join(':2181,') }}:2181"
