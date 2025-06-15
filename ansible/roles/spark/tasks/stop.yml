@@ -1,0 +1,15 @@
+- name: Stop Spark Master (only on master nodes)
+  shell: >
+    {{ spark_home }}/sbin/stop-master.sh
+  args:
+    executable: /bin/bash
+  when: "'spark_master' in group_names"
+  ignore_errors: yes
+
+- name: Stop Spark Worker (only on worker nodes)
+  shell: >
+    {{ spark_home }}/sbin/stop-worker.sh
+  args:
+    executable: /bin/bash
+  when: "'spark_workers' in group_names"
+  ignore_errors: yes

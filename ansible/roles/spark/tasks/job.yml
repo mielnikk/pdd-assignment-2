@@ -1,0 +1,43 @@
+- name: Ensure Spark jobs dir is writable
+  file:
+    path: "/opt/spark_jobs"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0755'
+
+- name: Ensure Spark jobs outpur dir is writable
+  file:
+    path: "/opt/output"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0755'
+
+- name: Ensure Spark jobs logs dir is writable
+  file:
+    path: "/opt/spark_logs"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0755'
+
+- name: Upload Spark job
+  copy:
+    src: trip_streaming.py
+    dest: /opt/spark_jobs/trip_streaming.py
+    mode: '0755'
+
+- name: Run Spark job
+  shell: >
+    LOG_FILE="/opt/spark_logs/trip_streaming_{{ ansible_date_time.iso8601 | regex_replace('[^a-zA-Z0-9]', '_') }}.log" &&
+    {{ spark_home }}/bin/spark-submit
+    --master spark://{{ spark_master_internal_ip }}:7077
+    --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.4.1
+    /opt/spark_jobs/trip_streaming.py
+    > $LOG_FILE 2>&1
+  args:
+    executable: /bin/bash
+  environment:
+    KAFKA_BOOTSTRAP_SERVERS: "{{ kafka_bootstrap_servers }}"
+    OUTPUT_DIR: "/opt/output"

@@ -7,3 +7,5 @@ broker_id: "{{ ansible_host.split('.')[-1] | int }}"
 zookeeper_connect: "{{ groups['zookeeper'] | map('extract', hostvars, ['internal_ip']) | join(':2181,') }}:2181"
 
 kafka_bootstrap_servers:  "{{ groups['kafka'] | map('extract', hostvars, ['internal_ip']) | join (':9092,') }}:9092"
+
+spark_master_internal_ip: "{{ hostvars[groups['spark_master'][0]].internal_ip }}"

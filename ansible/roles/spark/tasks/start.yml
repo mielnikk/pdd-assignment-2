@@ -13,7 +13,7 @@
 - name: Start Spark worker (if not master)
   when: not is_master
   shell: >
-    nohup {{ spark_home }}/sbin/start-worker.sh spark://{{ groups['spark_master'][0] }}:7077 &
+    nohup {{ spark_home }}/sbin/start-worker.sh spark://{{ spark_master_internal_ip }}:7077 &
   args:
     executable: /bin/bash
 
@@ -24,3 +24,4 @@
     port: 8080
     state: started
     timeout: 20
+

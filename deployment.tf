@@ -29,7 +29,7 @@ resource "google_compute_firewall" "kafka" {
     ports    = ["9092"]
   }
 
-  source_tags = ["edge"]
+  source_tags = ["feeder", "master"]
   target_tags = ["kafka"]
 
   direction = "INGRESS"
@@ -124,9 +124,9 @@ resource "google_compute_instance" "kafka_brokers" {
   tags = ["kafka"]
 }
 
-resource "google_compute_instance" "edge_node" {
-  count        = var.edge_node ? 1 : 0
-  name         = "edge-node"
+resource "google_compute_instance" "feeder" {
+  count        = 1
+  name         = "feeder"
   machine_type = var.instance_type
   zone         = var.zone
 
@@ -143,7 +143,7 @@ resource "google_compute_instance" "edge_node" {
     }
   }
 
-  tags = ["edge"]
+  tags = ["feeder"]
 }
 
 output "spark_master_internal_ip" {
@@ -178,10 +178,10 @@ output "zookeeper_external_ips" {
   value = [for instance in google_compute_instance.zookeepers : instance.network_interface[0].access_config[0].nat_ip]
 }
 
-output "edge_node_internal_ip" {
-  value = var.edge_node ? google_compute_instance.edge_node[0].network_interface[0].network_ip : ""
+output "feeder_internal_ip" {
+  value = google_compute_instance.feeder[0].network_interface[0].network_ip
 }
 
-output "edge_node_external_ip" {
-  value = var.edge_node ? google_compute_instance.edge_node[0].network_interface[0].access_config[0].nat_ip : ""
+output "feeder_external_ip" {
+  value = google_compute_instance.feeder[0].network_interface[0].access_config[0].nat_ip
 }

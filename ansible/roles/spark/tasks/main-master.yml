@@ -1,0 +1,31 @@
+- name: Download Spark
+  get_url:
+    url: https://downloads.apache.org/spark/spark-3.5.6/spark-3.5.6-bin-hadoop3.tgz
+    dest: /opt/spark.tgz
+
+- name: Extract Spark
+  unarchive:
+    src: /opt/spark.tgz
+    dest: /opt/
+    remote_src: yes
+
+- name: Symlink Spark
+  file:
+    src: /opt/spark-3.5.6-bin-hadoop3
+    dest: /opt/spark
+    state: link
+
+- name: Configure Spark master env
+  lineinfile:
+    path: /opt/spark/conf/spark-env.sh
+    line: "{{ item }}"
+    create: yes
+  loop:
+    - SPARK_MASTER_HOST={{ internal_ip }}
+    - SPARK_WORKER_CORES=2
+    - SPARK_WORKER_MEMORY=4g
+
+- name: Start Spark Master
+  shell: "nohup /opt/spark/sbin/start-master.sh &"
+  args:
+    executable: /bin/bash

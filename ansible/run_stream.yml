@@ -1,0 +1,7 @@
+- name: Spark job
+  hosts: spark_master
+  become: yes
+  tasks:
+    - include_role:
+        name: spark
+        tasks_from: job

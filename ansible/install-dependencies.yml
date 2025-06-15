@@ -20,17 +20,21 @@
 - name: Install Spark on Spark master nodes
   hosts: spark_master
   become: yes
-  roles:
-    - spark
+  tasks:
+    - include_role:
+        name: spark
+        tasks_from: main-master
 
 - name: Install Spark on Spark worker nodes
   hosts: spark_workers
   become: yes
-  roles:
-    - spark
+  tasks:
+    - include_role:
+        name: spark
+        tasks_from: main-worker
 
-- name: Install dependencies
-  hosts: edge
+- name: Install dependencies on Kafka feeder node
+  hosts: feeder
   become: yes
   roles:
-    - edge
+    - feeder

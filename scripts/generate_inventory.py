@@ -5,11 +5,13 @@ import os
 with open("terraform_output.json") as f:
     data = json.load(f)
 
+
 def write_group(f, name, external_ips, internal_ips):
     f.write(f"[{name}]\n")
     for ext, internal in zip(external_ips, internal_ips):
         f.write(f"{ext} ansible_host={ext} internal_ip={internal}\n")
     f.write("\n")
+
 
 with open("ansible/inventory.ini", "w") as f:
     # Spark Master
@@ -45,10 +47,10 @@ with open("ansible/inventory.ini", "w") as f:
     )
 
     # Optional: Edge Node
-    edge_ext = data.get("edge_node_external_ip", {}).get("value", "")
-    edge_int = data.get("edge_node_internal_ip", {}).get("value", "")
+    edge_ext = data.get("feeder_external_ip", {}).get("value", "")
+    edge_int = data.get("feeder_internal_ip", {}).get("value", "")
     if edge_ext and edge_int:
-        write_group(f, "edge", [edge_ext], [edge_int])
+        write_group(f, "feeder", [edge_ext], [edge_int])
 
     # Ansible SSH connection vars
     f.write("[all:vars]\n")

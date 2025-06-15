@@ -1,7 +1,0 @@
-- name: Print Kafka bootstrap server
-  hosts: all
-  gather_facts: no
-  tasks:
-    - name: Print variable
-      debug:
-        var: kafka_bootstrap_servers
