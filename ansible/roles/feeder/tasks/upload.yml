@@ -1,0 +1,13 @@
+- name: Create feeder directory
+  file:
+    path: /opt/feeder
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0755'
+
+- name: Upload Kafka feeder script
+  copy:
+    src: kafka_feeder.py
+    dest: /opt/feeder/kafka_feeder.py
+    mode: '0755'

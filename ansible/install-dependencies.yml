@@ -28,3 +28,9 @@
   become: yes
   roles:
     - spark
+
+- name: Install dependencies
+  hosts: edge
+  become: yes
+  roles:
+    - edge

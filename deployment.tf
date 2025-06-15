@@ -5,22 +5,6 @@ provider "google" {
   zone    = var.zone
 }
 
-# resource "google_compute_network" "spark_kafka_net" {
-#   name = "spark-kafka-network"
-# }
-#
-# resource "google_compute_firewall" "allow_internal" {
-#   name    = "allow-internal"
-#   network = google_compute_network.spark_kafka_net.name
-#
-#   allow {
-#     protocol = "tcp"
-#     ports    = ["22", "7077", "8080", "8081", "2181", "9092", "4040"]
-#   }
-#
-#   source_ranges = ["10.128.0.0/9"]
-# }
-
 resource "google_compute_firewall" "zookeeper" {
   name    = "zookeeper-allow-2181"
   network = "default"
@@ -32,6 +16,21 @@ resource "google_compute_firewall" "zookeeper" {
 
   source_tags = ["kafka"]
   target_tags = ["zookeeper"]
+
+  direction = "INGRESS"
+}
+
+resource "google_compute_firewall" "kafka" {
+  name    = "kafka-allow-9092"
+  network = "default"
+
+  allow {
+    protocol = "tcp"
+    ports    = ["9092"]
+  }
+
+  source_tags = ["edge"]
+  target_tags = ["kafka"]
 
   direction = "INGRESS"
 }

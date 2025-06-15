@@ -1,20 +1,16 @@
-- name: Set up Zookeeper nodes
-  hosts: zookeeper
-  become: true
-  tasks:
-    - name: Download Zookeeper
-      get_url:
-        url: https://downloads.apache.org/zookeeper/zookeeper-3.8.4/apache-zookeeper-3.8.4-bin.tar.gz
-        dest: /opt/zookeeper.tar.gz
+- name: Download Zookeeper
+  get_url:
+    url: https://downloads.apache.org/zookeeper/zookeeper-3.8.4/apache-zookeeper-3.8.4-bin.tar.gz
+    dest: /opt/zookeeper.tar.gz
 
-    - name: Extract Zookeeper
-      unarchive:
-        src: /opt/zookeeper.tar.gz
-        dest: /opt/
-        remote_src: yes
+- name: Extract Zookeeper
+  unarchive:
+    src: /opt/zookeeper.tar.gz
+    dest: /opt/
+    remote_src: yes
 
-    - name: Symlink Zookeeper
-      file:
-        src: /opt/apache-zookeeper-3.8.4-bin
-        dest: /opt/zookeeper
-        state: link
+- name: Symlink Zookeeper
+  file:
+    src: /opt/apache-zookeeper-3.8.4-bin
+    dest: /opt/zookeeper
+    state: link

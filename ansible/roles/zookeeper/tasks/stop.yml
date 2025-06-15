@@ -1,0 +1,22 @@
+- name: Stop ZooKeeper server
+  shell: >
+    {{ zookeeper_home }}/bin/zkServer.sh stop
+  args:
+    executable: /bin/bash
+  ignore_errors: yes
+
+- name: Kill any lingering ZooKeeper processes
+  shell: >
+    pkill -f zookeeper
+  ignore_errors: yes
+
+- name: Clear ZooKeeper logs
+  file:
+    path: "{{ zookeeper_home }}/logs"
+    state: absent
+
+- name: Recreate ZooKeeper log directory
+  file:
+    path: "{{ zookeeper_home }}/logs"
+    state: directory
+    mode: '0755'

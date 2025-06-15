@@ -1,0 +1,22 @@
+- name: Stop Kafka broker
+  shell: >
+    {{ kafka_home }}/bin/kafka-server-stop.sh
+  args:
+    executable: /bin/bash
+  ignore_errors: yes
+
+- name: Kill any lingering Kafka processes
+  shell: >
+    pkill -f kafka.Kafka
+  ignore_errors: yes
+
+- name: Clear Kafka logs
+  file:
+    path: "{{ kafka_home }}/logs"
+    state: absent
+
+- name: Recreate Kafka log directory
+  file:
+    path: "{{ kafka_home }}/logs"
+    state: directory
+    mode: '0755'

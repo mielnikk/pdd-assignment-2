@@ -1,0 +1,13 @@
+- name: Create feeder directory
+  file:
+    path: /opt/feeder
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0755'
+
+- name: Download Yellow Taxi Trip Record (Parquet)
+  get_url:
+    url: https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2022-01.parquet
+    dest: /opt/feeder/yellow_tripdata_2022-01.parquet
+    mode: '0644'

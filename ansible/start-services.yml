@@ -14,10 +14,10 @@
         name: kafka
         tasks_from: start
 
-- name: Start Spark
-  hosts: spark_master:spark_workers
-  become: yes
-  tasks:
-    - include_role:
-        name: spark
-        tasks_from: start
+#- name: Start Spark
+#  hosts: spark_master:spark_workers
+#  become: yes
+#  tasks:
+#    - include_role:
+#        name: spark
+#        tasks_from: start

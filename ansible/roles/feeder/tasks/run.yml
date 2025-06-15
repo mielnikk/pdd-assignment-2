@@ -1,0 +1,9 @@
+- name: Run Kafka feeder script
+  shell: >
+    nohup python3 /opt/feeder/kafka_feeder.py
+    --file /opt/feeder/yellow_tripdata_2022-01.parquet
+    --bootstrap {{ kafka_bootstrap_servers }}
+    --speedup 100 > /opt/feeder/feeder.log 2>&1 &
+  args:
+    chdir: /opt/feeder
+    executable: /bin/bash
